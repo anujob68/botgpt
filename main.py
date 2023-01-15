@@ -3,7 +3,7 @@ import flask
 
 app = flask.Flask(__name__)
 
-openai.api_key = "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"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 @app.route("/message", methods=["POST"])
 def message():
