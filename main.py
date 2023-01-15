@@ -1,14 +1,20 @@
-from typing import Optional
+import openai
+import flask
 
-from fastapi import FastAPI
+app = flask.Flask(__name__)
 
-app = FastAPI()
+openai.api_key = "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"
 
+@app.route("/message", methods=["POST"])
+def message():
+    message = flask.request.values.get("Body")
+    response = openai.Completion.create(
+        engine="text-davinci-002",
+        prompt=message,
+        max_tokens=2048
+    )
+    reply = response["choices"][0]["text"]
+    return f'<Response><Message>{reply}</Message></Response>'
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+if __name__ == "__main__":
+    app.run(port=3000)
